@@ -12,11 +12,6 @@
     <string name="pref_display_mode_absolute_key" translatable="false">absolute</string>
     <string name="pref_display_mode_percentage_key" translatable="false">percentage</string>
 
-    <string name="default_stocks_yahoo">YHOO</string>
-    <string name="default_stocks_apple">AAPL</string>
-    <string name="default_stocks_microsoft">MSFT</string>
-    <string name="default_stocks_facebook">FB</string>
-
     <string name="action_change_units" translatable="false">@string/pref_display_mode_key</string>
 
     <string name="button_add_stock_desc">Add a stock</string>

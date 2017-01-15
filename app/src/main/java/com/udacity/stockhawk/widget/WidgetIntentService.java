@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
+import com.udacity.stockhawk.data.PrefUtils;
 
 import java.util.Locale;
 
@@ -21,16 +22,18 @@ public class WidgetIntentService extends RemoteViewsService {
             Contract.Quote._ID,
             Contract.Quote.COLUMN_SYMBOL,
             Contract.Quote.COLUMN_PRICE,
+            Contract.Quote.COLUMN_ABSOLUTE_CHANGE,
             Contract.Quote.COLUMN_PERCENTAGE_CHANGE
     };
 
     static final int INDEX_ID = 0;
     private static final int INDEX_SYMBOL = 1;
     private static final int INDEX_PRICE = 2;
-    private static final int INDEX_PERCENTAGE_CHANGE = 3;
+    private static final int INDEX_ABSOLUTE_CHANGE = 3;
+    private static final int INDEX_PERCENTAGE_CHANGE = 4;
 
     @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+    public RemoteViewsFactory onGetViewFactory(final Intent intent) {
         return new RemoteViewsFactory() {
             private Cursor data = null;
 
@@ -71,15 +74,36 @@ public class WidgetIntentService extends RemoteViewsService {
                     return null;
                 }
                 Locale current = Locale.getDefault();
-
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.list_item_quote);
                 String stockName = data.getString(INDEX_SYMBOL);
                 double stockPrice = data.getDouble(INDEX_PRICE);
-                double stockPercentageChange = data.getDouble(INDEX_PERCENTAGE_CHANGE);
+                double stockChange;
+                String displayModeTypeAbsolute = "";
+                String displayModeTypePercentage = "";
+                if (PrefUtils.getDisplayMode(getBaseContext()).equals(getBaseContext().getString(R.string.pref_display_mode_absolute_key))) {
+                    stockChange = data.getDouble(INDEX_ABSOLUTE_CHANGE);
+                    displayModeTypeAbsolute = "$";
+
+                } else {
+                    stockChange = data.getDouble(INDEX_PERCENTAGE_CHANGE);
+                    displayModeTypePercentage = "%";
+                }
+                String stockChangeString = String.valueOf(String.format(current, "%.2f", stockChange));
+                String modifier;
+
                 views.setTextViewText(R.id.symbol, stockName);
                 views.setTextViewText(R.id.price, "$" + String.valueOf(String.format(current, "%.2f", stockPrice)));
-                views.setTextViewText(R.id.change, String.valueOf(String.format(current, "%.2f", stockPercentageChange) + "%"));
+                if (stockChangeString.contains("-")) {
+                    stockChangeString = stockChangeString.replace("-", "");
+                    modifier = "-";
+                    views.setInt(R.id.change, "setBackgroundResource",
+                            R.drawable.percent_change_pill_red);
+                } else {
+                    modifier = "+";
+                }
+                views.setTextViewText(R.id.change, modifier + displayModeTypeAbsolute + stockChangeString + displayModeTypePercentage);
+
 
                 return views;
             }

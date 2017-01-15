@@ -30,6 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
         </activity>
+
         <service
             android:name=".sync.QuoteIntentService"
             android:exported="false" />
@@ -55,8 +56,10 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-        <service android:name=".widget.WidgetIntentService" />
-
+        <service
+            android:name=".widget.WidgetIntentService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
     </application>
 

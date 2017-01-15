@@ -37,7 +37,7 @@ public class WidgetProvider extends AppWidgetProvider {
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
-
+            views.setEmptyView(R.id.widget_list, R.id.widget_empty);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

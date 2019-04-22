@@ -1,1 +1,3 @@
-This is the finished third project in Udacity's [Android Developer Nanodegree](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801). 
+This app allows the user to add and monitor stocks. A widget is also included.
+
+
